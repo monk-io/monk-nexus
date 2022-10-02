@@ -145,6 +145,9 @@ Type      Template      Repository  Version  Tags
 runnable  nexus/nexus3  local       -        repository
 group     nexus/stack   local       -        -   -
 
+➜ monk run nexus/stack
+
+
 ✔ Started local/nexus/stack
 ```
 
