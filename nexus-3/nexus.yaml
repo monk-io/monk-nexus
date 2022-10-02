@@ -1,0 +1,28 @@
+namespace: nexus
+
+
+nexus3:
+  defines: runnable
+  metadata:
+    defines: metadata
+    name: nexus
+    description: Nexus Repository OSS is an open source repository that supports many artifact formats, including Docker, Java™, and npm
+    tags: repository
+    website: https://www.sonatype.com/products/nexus-repository
+    publisher: "monk.io"
+    icon: https://images.peerspot.com/image/upload/c_scale,f_auto,q_auto,w_200/oNyXq7zCCxXF9TE6S5F9W5jG.png
+  containers:
+    defines: containers
+    nexus3:
+      image: sonatype/nexus3
+      image-tag: <- `${nexus-image}`
+      ports:
+        - 8081:8081
+      paths:
+        - <- `${monk-volume-path}/nexus3:/nexus-data`
+      environment:
+        - INSTALL4J_ADD_VM_PARAMS=-Xms2703m -Xmx2703m -XX:MaxDirectMemorySize=2703m
+  variables:
+    nexus-image:
+      value: <- $nexus-image-tag
+      type: string

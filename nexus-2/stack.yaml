@@ -1,0 +1,8 @@
+namespace: nexus
+
+stack:
+  defines: process-group
+  runnable-list:
+    - nexus/nexus3
+  variables:
+    nexus-image-tag: "latest"
