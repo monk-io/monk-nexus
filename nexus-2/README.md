@@ -1,8 +1,7 @@
-# Rabbitmq & Monk
+# Monk & Nexus
 
-This repository contains Monk.io template to deploy sonarqube-community system either locally or on cloud of your choice (AWS, GCP, Azure, Digital Ocean).
+This repository contains Monk.io template to deploy Nexus 3 system either locally or on cloud of your choice (AWS, GCP, Azure, Digital Ocean).
 
-This template includes Nginx as a reverse proxy  with rabbitmq out of box.
 
 ## Start
 
@@ -14,14 +13,14 @@ Start `monkd` and login.
 monk login --email=<email> --password=<password>
 ```
 
-## Clone Monk rabbitmq repository
+## Clone Monk nexus repository
 
 In order to load templates and change configuration simply use below commands: 
 ```bash
-git clone https://github.com/kaganmersin/monk-rabbitmq
+git clone https://github.com/kaganmersin/monk-nexus
 
-# and change directory to the monk-rabbitmq/rabbitmq template folder
-cd monk-rabbitmq/rabbitmq
+# and change directory to the monk-nexus/nexus-2 template folder
+cd monk-nexus/nexus-2
 
 ```
 
@@ -29,46 +28,24 @@ cd monk-rabbitmq/rabbitmq
 
 You can add/remove configuration of the template.
 
-The current variables can be found in `rabbitmq/rabbitmq/variables` section
+The current variables can be found in `nexus/stack/variables` section
 
 ```yaml
   variables:
-    rabbitmq-image-tag: "3.10-management"
-    nginx-listen-port: 80
-    nginx-image-tag: "latest"
-    rabbitmq-server-name: "rabbitmq.example.com"
-    rabbitmq-node-port: 15672
+    nexus-image-tag: "latest"
 ```
-
-### Rabbitmq configuration files
-
-You can find configuration files in `/files` directory in repository and can edit before the running kit. There are 3 configuration files which bind to the container while run rabbitmq-monk kit 
-
-
-| Configuration File	 | Format Used | Directory in Container | Purpose 
-|----------|-------------|------|---------|
-| **rabbitmq.conf** | New style format (sysctl or ini-like)	 | ` /etc/rabbitmq/rabbitmq.conf` | Primary configuration file. Should be used for most settings. It is easier for humans to read and machines (deployment tools) to generate. Not every setting can be expressed in this format.
-| **advanced.config** | Classic (Erlang terms) | `/etc/rabbitmq/advanced.config` | A limited number of settings that cannot be expressed in the new style configuration format, such as LDAP queries. Only should be used when necessary. | 
-| **rabbitmq-env.conf** | Environment variable pairs | `/etc/rabbitmq/rabbitmq-env.conf` | Used to set environment variables relevant to RabbitMQ in one place. |
-
-
-
-
 
 ##  Template variables
 
 | Variable | Description | Type | Example |
 |----------|-------------|------|---------|
-| **rabbitmq-node-port** | Rabbitmq user interface port (It must be same with management.tcp.port in rabbitmq.conf  ) | int | 15672
-| **rabbitmq-server-name** | Fqdn that nginx will accept and route to. | string | rabbitmq.example.com |
-| **rabbitmq-image-tag** | Rabbitmq image version. | string | 3.10-management |
-| **nginx-listen-port** | Configures the ports that the nginx listens on. | int | 80 |
-| **nginx-image-tag** | Nginx image version. | string | latest |
+| **nexus-image-tag** | Nexus image version. | string | latest |
+
 
 
 ## Local Deployment
 
-First clone the repository and change the current directory to the /rabbitmq folder and simply run below command after launching `monkd`:
+First clone the repository and change the current directory to the /nexus-2 folder and simply run below command after launching `monkd`:
 :
 
 ```bash
@@ -76,33 +53,38 @@ First clone the repository and change the current directory to the /rabbitmq fol
 
 ✨ Loaded:
  ├─🔩 Runnables:
- │  ├─🧩 rabbitmq/nginx
- │  └─🧩 rabbitmq/rabbitmq
+ │  └─🧩 nexus/nexus2
  ├─🔗 Process groups:
- │  └─🧩 rabbitmq/stack
+ │  └─🧩 nexus/stack
  └─⚙️ Entity instances:
-    └─🧩 rabbitmq/rabbitmq/metadata
+    └─🧩 nexus/nexus2/metadata
 ✔ All templates loaded successfully
 
-➜  monk list rabbitmq
+➜  monk list nexus
 
 ✔ Got the list
-Type      Template                         Repository  Version      Tags
-runnable  nginx/latest                     rabbitmq    -            -
-runnable  nginx/reverse-proxy              rabbitmq    -            -
-runnable  nginx/reverse-proxy-ssl-certbot  rabbitmq    1.15-alpine  -
-runnable  rabbitmq/nginx                   local       -            -
-runnable  rabbitmq/rabbitmq                local       -            -
-group     rabbitmq/stack                   local       -            -
+Type      Template      Repository  Version  Tags
+runnable  nexus/nexus2  local       -        repository
+group     nexus/stack   local       -        -   -
 
-➜  monk run rabbitmq/stack
+➜ monk run nexus/stack
 
-✔ Started local/rabbitmq/stack
+✔ Started local/nexus/stack
 
 ```
 
-This will start the entire rabbitmq/stack with a Nginx reverse proxy. 
+This will start the entire nexus/stack with a Nginx reverse proxy. 
 
+## Login to Nexus
+
+To first login with admin user, use below credentials
+
+Use following url; ` http://<url>:<port>/nexus `
+
+```bash
+User: admin
+Password: admin123
+```
 
 ## Cloud Deployment
 
@@ -110,7 +92,7 @@ To deploy the above system to your cloud provider, create a new Monk cluster and
 
 ```bash
 ➜  monk cluster new
-? New cluster name rabbitmq
+? New cluster name nexus
 ✔ Cluster created
 Your cluster has been created successfully.
 
@@ -120,7 +102,7 @@ Your cluster has been created successfully.
 ➜  monk cluster grow -p gcp
 ? Cloud provider gcp
 ? Name of the new instance my-instance
-? Tags (split by whitespace) rabbitmq
+? Tags (split by whitespace) nexus
 ? Region europe-central2
 ? Zone europe-central2-a
 ? Instance type e2-medium
@@ -150,55 +132,42 @@ Once cluster is ready execute the same command as for local and select your clus
 
 ✨ Loaded:
  ├─🔩 Runnables:
- │  ├─🧩 rabbitmq/nginx
- │  └─🧩 rabbitmq/rabbitmq
+ │  └─🧩 nexus/nexus2
  ├─🔗 Process groups:
- │  └─🧩 rabbitmq/stack
+ │  └─🧩 nexus/stack
  └─⚙️ Entity instances:
-    └─🧩 rabbitmq/rabbitmq/metadata
+    └─🧩 nexus/nexus2/metadata
 ✔ All templates loaded successfully
 
-➜  monk list rabbitmq
+➜  monk list nexus
 
 ✔ Got the list
-Type      Template                         Repository  Version      Tags
-runnable  nginx/latest                     rabbitmq    -            -
-runnable  nginx/reverse-proxy              rabbitmq    -            -
-runnable  nginx/reverse-proxy-ssl-certbot  rabbitmq    1.15-alpine  -
-runnable  rabbitmq/nginx                   local       -            -
-runnable  rabbitmq/rabbitmq                local       -            -
-group     rabbitmq/stack                   local       -            -
+Type      Template      Repository  Version  Tags
+runnable  nexus/nexus2  local       -        repository
+group     nexus/stack   local       -        -   -
 
-➜  monk run rabbitmq/stack
+➜  monk run nexus/stack
 
-✔ Started local/rabbitmq/stack
-
+✔ Started local/nexus/stack
 ```
 
 ## Logs & Shell
 
 ```bash
-# show Rabbitmq logs
-➜  monk logs -l 1000 -f rabbitmq/rabbitmq
-
-# show Nginx logs
-➜  monk logs -l 1000 -f rabbitmq/nginx
-
-# access shell in the container running Rabbitmq
-➜  monk shell rabbitmq/rabbitmq
+# show Nexus logs
+➜  monk logs -l 1000 -f nexus/nexus2
 
 # access shell in the container running Nginx
-➜  monk shell rabbitmq/nginx
+➜  monk shell nexus/nexus2
 
 ```
 
 ## Stop, remove and clean up workloads and templates
 
 ```bash
-➜ monk purge -x rabbitmq/stack rabbitmq/rabbitmq rabbitmq/nginx 
+➜ monk purge -x nexus/stack nexus/nexus2 
 
-✔ rabbitmq/stack purged
-✔ rabbitmq/rabbitmq purged
-✔ rabbitmq/nginx purged
+✔ nexus/stack purged
+✔ nexus/nexus2 purged
 
 ```
