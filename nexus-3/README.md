@@ -17,7 +17,7 @@ monk login --email=<email> --password=<password>
 
 In order to load templates and change configuration simply use below commands: 
 ```bash
-git clone https://github.com/kaganmersin/monk-nexus
+git clone https://github.com/monk-io/monk-nexus
 
 # and change directory to the monk-nexus/nexus-3 template folder
 cd monk-nexus/nexus-3
