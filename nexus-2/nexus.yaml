@@ -11,6 +11,12 @@ nexus2:
     website: https://www.sonatype.com/products/nexus-repository
     publisher: "monk.io"
     icon: https://images.peerspot.com/image/upload/c_scale,f_auto,q_auto,w_200/oNyXq7zCCxXF9TE6S5F9W5jG.png
+  services:
+    nginx:
+      container: nexus2
+      port: 8081
+      protocol: tcp
+      host-port: 8081      
   containers:
     defines: containers
     nexus2:
