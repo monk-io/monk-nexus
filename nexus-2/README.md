@@ -2,10 +2,9 @@
 
 This repository contains Monk.io template to deploy Nexus 3 system either locally or on cloud of your choice (AWS, GCP, Azure, Digital Ocean).
 
-
 ## Start
 
-Set up Monk - https://docs.monk.io/docs/monk-in-10/
+Set up Monk - [https://docs.monk.io/docs/monk-in-10/](https://docs.monk.io/docs/monk-in-10/)
 
 Start `monkd` and login.
 
@@ -15,7 +14,8 @@ monk login --email=<email> --password=<password>
 
 ## Clone Monk nexus repository
 
-In order to load templates and change configuration simply use below commands: 
+In order to load templates and change configuration simply use below commands:
+
 ```bash
 git clone https://github.com/monk-io/monk-nexus
 
@@ -35,51 +35,64 @@ The current variables can be found in `nexus/stack/variables` section
     nexus-image-tag: "latest"
 ```
 
-##  Template variables
+## Template variables
 
-| Variable | Description | Type | Example |
-|----------|-------------|------|---------|
-| **nexus-image-tag** | Nexus image version. | string | latest |
-
-
+| Variable            | Description          | Type   | Example |
+| ------------------- | -------------------- | ------ | ------- |
+| **nexus-image-tag** | Nexus image version. | string | latest  |
 
 ## Local Deployment
 
-First clone the repository and change the current directory to the /nexus-2 folder and simply run below command after launching `monkd`:
-:
+| First clone the repository and change the current directory to the /nexus-2 folder and simply run below command after launching `monkd`: |
+| :--------------------------------------------------------------------------------------------------------------------------------------: |
 
 ```bash
 ➜  monk load MANIFEST
+✔ Read files successfully
+✔ Loaded nexus.yaml successfully
 
+Loaded 2 runnables, 0 process groups, 0 services, 0 entities and 0 entity instances
 ✨ Loaded:
- ├─🔩 Runnables:
- │  └─🧩 nexus/nexus2
- ├─🔗 Process groups:
- │  └─🧩 nexus/stack
- └─⚙️ Entity instances:
-    └─🧩 nexus/nexus2/metadata
+ └─🔩 Runnables:
+    ├─🧩 nexus2/base
+    └─🧩 nexus2/nexus
 ✔ All templates loaded successfully
 
 ➜  monk list nexus
 
 ✔ Got the list
 Type      Template      Repository  Version  Tags
-runnable  nexus/nexus2  local       -        repository
-group     nexus/stack   local       -        -   -
-
+runnable  nexus2/base   local       -        Nexus Repository, Artifact Repository, Package Management, DevOps, Continuous Integration, Continuous Deployment, Open Source, Binary Management, Docker Registry, Maven Repository, Software Development, Cloud Computing, Scalability, Repository Management, Repository Health
+runnable  nexus2/nexus  local       -        Nexus Repository, Artifact Repository, Package Management, DevOps, Continuous Integration, Continuous Deployment, Open Source, Binary Management, Docker Registry, Maven Repository, Software Development, Cloud Computing, Scalability, Repository Management, Repository Health
 ➜ monk run nexus/stack
 
-✔ Started local/nexus/stack
+✔ Starting the run job: local/nexus2/nexus... DONE
+✔ Preparing nodes DONE
+✔ Checking/pulling images DONE
+✔ Starting containers DONE
+✔ New container local-2f5b5561219050743a02ae052f-local-nexus2-nexus-nexus created DONE
+✔ Started local/nexus2/nexus
+🔩 templates/local/nexus2/nexus
+ └─🧊 Peer local
+    └─🔩 templates/local/nexus2/nexus
+       └─📦 local-2f5b5561219050743a02ae052f-local-nexus2-nexus-nexus running
+          ├─🧩 sonatype/nexus:latest
+          └─💾 /var/lib/monkd/volumes/nexus2 -> /sonatype-work
 
+💡 You can inspect and manage your above stack with these commands:
+        monk logs (-f) local/nexus2/nexus - Inspect logs
+        monk shell     local/nexus2/nexus - Connect to the container's shell
+        monk do        local/nexus2/nexus/action_name - Run defined action (if exists)
+💡 Check monk help for more!
 ```
 
-This will start the entire nexus/stack with a Nginx reverse proxy. 
+This will start the entire nexus/stack with a Nginx reverse proxy.
 
 ## Login to Nexus
 
 To first login with admin user, use below credentials
 
-Use following url; ` http://<url>:<port>/nexus `
+Use following url; `http://<url>:<port>/nexus`
 
 ```bash
 User: admin
@@ -126,31 +139,6 @@ Your cluster has been created successfully.
 ✔ Cluster grown successfully
 ```
 
-Once cluster is ready execute the same command as for local and select your cluster (the option will appear automatically).
-```bash
-➜  monk load MANIFEST
-
-✨ Loaded:
- ├─🔩 Runnables:
- │  └─🧩 nexus/nexus2
- ├─🔗 Process groups:
- │  └─🧩 nexus/stack
- └─⚙️ Entity instances:
-    └─🧩 nexus/nexus2/metadata
-✔ All templates loaded successfully
-
-➜  monk list nexus
-
-✔ Got the list
-Type      Template      Repository  Version  Tags
-runnable  nexus/nexus2  local       -        repository
-group     nexus/stack   local       -        -   -
-
-➜  monk run nexus/stack
-
-✔ Started local/nexus/stack
-```
-
 ## Logs & Shell
 
 ```bash
@@ -165,7 +153,7 @@ group     nexus/stack   local       -        -   -
 ## Stop, remove and clean up workloads and templates
 
 ```bash
-➜ monk purge -x nexus/stack nexus/nexus2 
+➜ monk purge -x nexus2/nexus
 
 ✔ nexus/stack purged
 ✔ nexus/nexus2 purged

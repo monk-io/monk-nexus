@@ -1,2 +1,2 @@
-REPO monk-nexus
-LOAD nexus.yaml stack.yaml
+REPO nexus-2
+LOAD nexus.yaml
