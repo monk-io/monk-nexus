@@ -1,32 +1,42 @@
-namespace: nexus
+---
+namespace: nexus2
 
-
-nexus2:
+base:
   defines: runnable
   metadata:
-    defines: metadata
-    name: nexus
-    description: Nexus Repository OSS is an open source repository that supports many artifact formats, including Docker, Java™, and npm
-    tags: repository
+    name: Nexus 2
+    shortname: Nexus 2
+    description: |
+      Nexus Repository offers support for popular package formats like Maven, npm, NuGet, and Docker, and enables developers to manage their components with fine-grained access control and repository health checks. It offers caching, proxying, and virtualization capabilities, allowing developers to distribute artifacts across a global network of servers, and ensuring maximum reliability and scalability.
+      Nexus Repository seamlessly integrates with popular DevOps tools, including Jenkins, GitLab, and Kubernetes, making it easy to incorporate package management into existing workflows. It also offers features like role-based access control and repository health checks, which help to ensure the security and integrity of the software components being managed.
+      Overall, Nexus Repository is a powerful tool for developers looking to manage and distribute software components in a secure and scalable way. It simplifies package management, enhances productivity, and helps teams to build and deploy software faster and with greater reliability.
+    tags: Nexus Repository, Artifact Repository, Package Management, DevOps, Continuous Integration, Continuous Deployment, Open Source, Binary Management, Docker Registry, Maven Repository, Software Development, Cloud Computing, Scalability, Repository Management, Repository Health
     website: https://www.sonatype.com/products/nexus-repository
-    publisher: "monk.io"
+    publisher: monk.io
     icon: https://images.peerspot.com/image/upload/c_scale,f_auto,q_auto,w_200/oNyXq7zCCxXF9TE6S5F9W5jG.png
-  services:
-    nginx:
-      container: nexus2
-      port: 8081
-      protocol: tcp
-      host-port: 8081      
+    version: 1.0
+    private: true
   containers:
-    defines: containers
-    nexus2:
+    nexus:
       image: sonatype/nexus
       image-tag: <- `${nexus-image}`
-      ports:
-        - 8081:8081
-      paths:
-        - <- `${monk-volume-path}/nexus2:/sonatype-work`
   variables:
     nexus-image:
-      value: <- $nexus-image-tag
+      value: latest
       type: string
+
+nexus:
+  defines: runnable
+  inherits: nexus2/base
+  metadata:
+    private: false
+  containers:
+    nexus:
+      paths:
+        - <- `${monk-volume-path}/nexus2:/sonatype-work`
+  services:
+    nexus:
+      container: nexus
+      port: 8081
+      protocol: tcp
+      host-port: 8081

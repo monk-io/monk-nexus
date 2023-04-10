@@ -2,10 +2,9 @@
 
 This repository contains Monk.io template to deploy Nexus 3 system either locally or on cloud of your choice (AWS, GCP, Azure, Digital Ocean).
 
-
 ## Start
 
-Set up Monk - https://docs.monk.io/docs/monk-in-10/
+Set up Monk - [https://docs.monk.io/docs/monk-in-10/](https://docs.monk.io/docs/monk-in-10/)
 
 Start `monkd` and login.
 
@@ -15,7 +14,8 @@ monk login --email=<email> --password=<password>
 
 ## Clone Monk nexus repository
 
-In order to load templates and change configuration simply use below commands: 
+In order to load templates and change configuration simply use below commands:
+
 ```bash
 git clone https://github.com/monk-io/monk-nexus
 
@@ -35,56 +35,75 @@ The current variables can be found in `nexus/stack/variables` section
     nexus-image-tag: "latest"
 ```
 
-##  Template variables
+## Template variables
 
-| Variable | Description | Type | Example |
-|----------|-------------|------|---------|
-| **nexus-image-tag** | Nexus image version. | string | latest |
-
-
+| Variable            | Description          | Type   | Example |
+| ------------------- | -------------------- | ------ | ------- |
+| **nexus-image-tag** | Nexus image version. | string | latest  |
 
 ## Local Deployment
 
-First clone the repository and change the current directory to the /nexus-3 folder and simply run below command after launching `monkd`:
-:
+| First clone the repository and change the current directory to the /nexus-3 folder and simply run below command after launching `monkd`: |
+| :--------------------------------------------------------------------------------------------------------------------------------------: |
 
 ```bash
 ➜  monk load MANIFEST
 
+✔ Read files successfully
+✔ Loaded nexus.yaml successfully
+
+Loaded 2 runnables, 0 process groups, 0 services, 0 entities and 0 entity instances
 ✨ Loaded:
- ├─🔩 Runnables:
- │  └─🧩 nexus/nexus3
- ├─🔗 Process groups:
- │  └─🧩 nexus/stack
- └─⚙️ Entity instances:
-    └─🧩 nexus/nexus3/metadata
+ └─🔩 Runnables:
+    ├─🧩 nexus3/base
+    └─🧩 nexus3/nexus
 ✔ All templates loaded successfully
 
 ➜  monk list nexus
 
 ✔ Got the list
 Type      Template      Repository  Version  Tags
-runnable  nexus/nexus3  local       -        repository
-group     nexus/stack   local       -        -   -
+runnable  nexus3/base   local       -        Nexus Repository, Artifact Repository, Package Management, DevOps, Continuous Integration, Continuous Deployment, Open Source, Binary Management, Docker Registry, Maven Repository, Software Development, Cloud Computing, Scalability, Repository Management, Repository Health
+runnable  nexus3/nexus  local       -        Nexus Repository, Artifact Repository, Package Management, DevOps, Continuous Integration, Continuous Deployment, Open Source, Binary Management, Docker Registry, Maven Repository, Software Development, Cloud Computing, Scalability, Repository Management, Repository Health
 
-➜ monk run nexus/stack
+➜ monk run nexus3/nexus
 
-✔ Started local/nexus/stack
+✔ Starting the run job: local/nexus3/nexus... DONE
+✔ Preparing nodes DONE
+✔ Checking/pulling images...
+✔ [================================================] 100% sonatype/nexus3:latest local
+✔ Checking/pulling images DONE
+✔ Starting containers DONE
+✔ New container local-01b4a985afcbf1cfec293bdba1-local-nexus3-nexus-nexus created DONE
+✔ Started local/nexus3/nexus
+🔩 templates/local/nexus3/nexus
+ └─🧊 Peer local
+    └─🔩 templates/local/nexus3/nexus
+       └─📦 local-01b4a985afcbf1cfec293bdba1-local-nexus3-nexus-nexus running
+          ├─🧩 sonatype/nexus3:latest
+          └─💾 /var/lib/monkd/volumes/nexus3 -> /nexus-data
+
+💡 You can inspect and manage your above stack with these commands:
+        monk logs (-f) local/nexus3/nexus - Inspect logs
+        monk shell     local/nexus3/nexus - Connect to the container's shell
+        monk do        local/nexus3/nexus/action_name - Run defined action (if exists)
+💡 Check monk help for more!
 
 ```
 
-This will start the entire nexus/stack with a Nginx reverse proxy. 
+This will start the entire nexus/stack with a Nginx reverse proxy.
 
 ## Login to Nexus
 
 To first login with admin user, fetch admin password with below command
 
 ```bash
-➜ monk exec nexus/nexus3 cat /nexus-data/admin.password
+➜ monk exec nexus3/nexus cat /nexus-data/admin.password
 
 ✔ Connecting to shell started.
 2ae61c29-8467-4679-88b3-74df31d1f4bfk
 ```
+
 ## Cloud Deployment
 
 To deploy the above system to your cloud provider, create a new Monk cluster and provision your instances.
@@ -126,23 +145,24 @@ Your cluster has been created successfully.
 ```
 
 Once cluster is ready execute the same command as for local and select your cluster (the option will appear automatically).
+
 ```bash
 ➜  monk load MANIFEST
 
 ✨ Loaded:
  ├─🔩 Runnables:
- │  └─🧩 nexus/nexus3
+ │  └─🧩 nexus3/nexus
  ├─🔗 Process groups:
  │  └─🧩 nexus/stack
  └─⚙️ Entity instances:
-    └─🧩 nexus/nexus3/metadata
+    └─🧩 nexus3/nexus/metadata
 ✔ All templates loaded successfully
 
 ➜  monk list nexus
 
 ✔ Got the list
 Type      Template      Repository  Version  Tags
-runnable  nexus/nexus3  local       -        repository
+runnable  nexus3/nexus  local       -        repository
 group     nexus/stack   local       -        -   -
 
 ➜ monk run nexus/stack
@@ -155,19 +175,19 @@ group     nexus/stack   local       -        -   -
 
 ```bash
 # show Nexus logs
-➜  monk logs -l 1000 -f nexus/nexus3
+➜  monk logs -l 1000 -f nexus3/nexus
 
 # access shell in the container running Nginx
-➜  monk shell nexus/nexus3
+➜  monk shell nexus3/nexus
 
 ```
 
 ## Stop, remove and clean up workloads and templates
 
 ```bash
-➜ monk purge -x nexus/stack nexus/nexus3 
+➜ monk purge -x nexus/stack nexus3/nexus
 
 ✔ nexus/stack purged
-✔ nexus/nexus3 purged
+✔ nexus3/nexus purged
 
 ```
