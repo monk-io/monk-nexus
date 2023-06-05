@@ -19,7 +19,7 @@ base:
   containers:
     nexus:
       image: sonatype/nexus
-      image-tag: <- `${nexus-image}`
+      image-tag: <- $nexus-image
   variables:
     nexus-image:
       value: latest
